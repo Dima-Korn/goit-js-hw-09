@@ -1,3 +1,6 @@
+import SimpleLightbox from "simplelightbox";
+import "simplelightbox/dist/simple-lightbox.min.css";
+
 const images = [
       {
         preview:
@@ -64,57 +67,20 @@ const images = [
       },
     ];
 
-   
-import SimpleLightbox from "simplelightbox";
-import "simplelightbox/dist/simple-lightbox.min.css";
-
-const modal = basicLightbox.create('<img src="" alt="Large Image">', {
-    onClose: (instance) => {
-        window.removeEventListener("keydown", closeModalOnEsc); 
-    },
-    onShow: (instance) => {
-        window.addEventListener("keydown", closeModalOnEsc);
-    }
-});
-
-const galleryBox = document.querySelector(".gallery");
-galleryBox.insertAdjacentHTML("beforeend", createMarkup(images));
-galleryBox.addEventListener("click", handleGalleryClick);
-
-function createMarkup(arr){
-    return arr
-    .map(({ original, preview, description }) => `
-    <li class="gallery-item">
-    <a class="gallery-link" href="${original}">
-      <img
-        class="gallery-image"
-        src="${preview}"
-        data-source="${original}"
-        alt="${description}"
-        width="360"
-        height="200"
-      />
-    </a>
-  </li>
-  ` )
-  .join("")
+function createMarkup(arr) {
+    return arr.map(({ preview, original, description }) => `
+        <li class="gallery-item">
+            <a class="gallery-link" href="${original}">
+                <img class="gallery-image" src="${preview}" alt="${description}" />
+            </a>
+        </li>
+    `).join("");
 }
 
-// function handleGalleryClick(event) {
-//     event.preventDefault();
-//     if (event.target.classList.contains('gallery-image')) {
-//         const largeImageSrc = event.target.dataset.source; 
-//         openModal(largeImageSrc); 
-//     }
-// }
+const galleryElement = document.querySelector('ul.gallery');
+galleryElement.innerHTML = createMarkup(images);
 
-// function openModal(modalImage) {
-//     modal.element().querySelector('img').src = modalImage;
-//     modal.show();
-// }
-
-// function closeModalOnEsc(event) {
-//     if (event.key === "Escape") {
-//         modal.close(); 
-//     }
-// }
+const lightbox = new SimpleLightbox('.gallery a', {
+    captionsData: 'alt', 
+    captionDelay: 250,
+});
